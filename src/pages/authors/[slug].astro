@@ -1,0 +1,69 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Container from '../../components/common/Container.astro';
+import PostGrid from '../../components/blog/PostGrid.astro';
+import AuthorCard from '../../components/blog/AuthorCard.astro';
+import { authors } from '../../data/authors';
+import { posts } from '../../data/posts';
+
+export function getStaticPaths() {
+  return Object.entries(authors).map(([slug, author]) => {
+    const authorPosts = posts.filter(post => post.author?.name === author.name);
+    return {
+      params: { slug },
+      props: { author, posts: authorPosts }
+    };
+  });
+}
+
+const { author, posts: authorPosts } = Astro.props;
+
+// Get author stats
+const stats = {
+  totalPosts: authorPosts.length,
+  totalWords: authorPosts.reduce((acc, post) => acc + post.content.split(/\s+/).length, 0),
+  categories: [...new Set(authorPosts.map(post => post.category))].length,
+  firstPost: authorPosts.sort((a, b) => a.publishDate.getTime() - b.publishDate.getTime())[0]?.publishDate
+};
+---
+
+<Layout title={`${author.name} - Author Profile`}>
+  <Container>
+    <div class="py-16">
+      <!-- Author Profile -->
+      <div class="mb-12">
+        <AuthorCard author={author} />
+      </div>
+
+      <!-- Author Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+        {[
+          { label: 'Articles Written', value: stats.totalPosts },
+          { label: 'Words Written', value: `${Math.floor(stats.totalWords / 1000)}K+` },
+          { label: 'Categories', value: stats.categories },
+          { label: 'Writing Since', value: stats.firstPost ? new Date(stats.firstPost).getFullYear() : 'N/A' }
+        ].map(stat => (
+          <div class="relative group">
+            <div class="absolute inset-0 bg-cosmic-400/10 rounded-lg blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div class="relative bg-gray-800/50 rounded-lg p-6 backdrop-blur-sm">
+              <div class="text-2xl font-bold text-cosmic-400 mb-2">{stat.value}</div>
+              <div class="text-sm text-gray-400">{stat.label}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Author's Posts -->
+      <div>
+        <h2 class="text-2xl font-bold text-white mb-8">Articles by {author.name}</h2>
+        {authorPosts.length > 0 ? (
+          <PostGrid posts={authorPosts} columns={3} />
+        ) : (
+          <div class="text-center text-gray-400 py-12">
+            No articles published yet.
+          </div>
+        )}
+      </div>
+    </div>
+  </Container>
+</Layout>

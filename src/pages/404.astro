@@ -1,0 +1,138 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Container from '../components/common/Container.astro';
+import Button from '../components/common/Button.astro';
+
+const title = "404 - Page Not Found";
+
+// Random space-themed 404 messages
+const messages = [
+  "Houston, we have a problem",
+  "Lost in space",
+  "This page has been sucked into a black hole",
+  "Ground control to Major Tom...",
+  "These aren't the pages you're looking for"
+];
+
+const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+---
+
+<Layout title={title}>
+  <Container>
+    <div class="min-h-[70vh] flex flex-col items-center justify-center py-16 text-center">
+      <div class="relative space-y-8 max-w-2xl mx-auto px-4">
+        <!-- Animated Space Scene -->
+        <div class="relative w-48 h-48 mx-auto mb-8">
+          <!-- Planet -->
+          <div class="absolute inset-0 rounded-full bg-gradient-to-br from-cosmic-400 to-cosmic-600 animate-float">
+            <div class="absolute inset-0 rounded-full bg-black opacity-30"></div>
+          </div>
+          
+          <!-- Orbiting Satellite -->
+          <div class="absolute inset-[-10%] animate-spin-slow">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-300 rounded-full shadow-lg"></div>
+            <div class="absolute inset-0 border-2 border-gray-500/20 rounded-full"></div>
+          </div>
+
+          <!-- Stars -->
+          {Array.from({ length: 20 }).map((_, i) => (
+            <div
+              class="absolute w-1 h-1 bg-white rounded-full animate-twinkle"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 3}s`
+              }}
+            />
+          ))}
+        </div>
+
+        <!-- 404 Text -->
+        <h1 class="text-6xl sm:text-8xl font-bold bg-gradient-to-r from-cosmic-400 via-purple-400 to-cosmic-300 bg-clip-text text-transparent">
+          404
+        </h1>
+        
+        <h2 class="text-2xl sm:text-3xl font-bold text-white">
+          {randomMessage}
+        </h2>
+        
+        <p class="text-lg text-gray-400 max-w-md mx-auto">
+          The cosmic coordinates you're looking for seem to be in another dimension. Let's get you back on track.
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap justify-center gap-4 mt-8">
+          <Button 
+            href="/" 
+            variant="primary"
+            class="group"
+          >
+            <span class="flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              Return Home
+            </span>
+          </Button>
+          
+          <Button 
+            href="/blog" 
+            variant="outline"
+            class="group"
+          >
+            <span class="flex items-center gap-2">
+              Explore Blog
+              <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </span>
+          </Button>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="mt-12 pt-8 border-t border-gray-800">
+          <h3 class="text-lg font-medium text-white mb-4">Popular Destinations</h3>
+          <div class="flex flex-wrap justify-center gap-4">
+            {[
+              { href: '/play', label: 'Play Quiz' },
+              { href: '/authors', label: 'Meet Authors' },
+              { href: '/generate', label: 'Generate Content' },
+              { href: '/about', label: 'About Us' }
+            ].map(link => (
+              <a
+                href={link.href}
+                class="px-4 py-2 bg-gray-800/50 text-gray-300 rounded-lg hover:bg-cosmic-900/50 hover:text-cosmic-300 transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>
+
+<style>
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.8); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 20s linear infinite;
+}
+
+.animate-twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+</style>

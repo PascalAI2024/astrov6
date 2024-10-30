@@ -1,0 +1,87 @@
+---
+import type { BlogPost } from '../../types/blog';
+import { format } from 'date-fns';
+import ArticleVisual from './ArticleVisual.astro';
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+
+// Format category and tags for URLs
+const categorySlug = post.category.toLowerCase().replace(/\s+/g, '-');
+const tagSlugs = post.tags.map(tag => tag.toLowerCase().replace(/\s+/g, '-'));
+
+// Default image handling
+const defaultImage = '/images/blog/default.jpg';
+const imageUrl = post.imageUrl || defaultImage;
+
+const visualType = post.tags.includes('black holes') ? 'black-hole' 
+  : post.tags.includes('galaxies') ? 'galaxy'
+  : post.tags.includes('planets') ? 'planet'
+  : post.tags.includes('stars') ? 'star'
+  : 'nebula';
+---
+
+<article class="group relative bg-gray-900 rounded-xl overflow-hidden h-full transform-gpu transition-all duration-500 hover:scale-[1.02]">
+  <div class="absolute -inset-1 bg-gradient-to-r from-cosmic-600/50 via-purple-600/50 to-cosmic-400/50 rounded-xl opacity-0 group-hover:opacity-100 blur-xl transition-all duration-500 group-hover:duration-200"></div>
+
+  <div class="relative h-full">
+    <a href={`/blog/${post.slug}`} class="absolute inset-0 z-20">
+      <span class="sr-only">Read article: {post.title}</span>
+    </a>
+
+    <div class="aspect-w-16 aspect-h-9 relative">
+      <img 
+        src={imageUrl} 
+        alt={post.title}
+        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        loading="lazy"
+        onerror="this.src='/images/blog/default.jpg'"
+      />
+      
+      <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-90 transition-all duration-500">
+        <div class="w-32 h-32 transform group-hover:rotate-180 transition-transform duration-[1.5s] ease-out">
+          <ArticleVisual type={visualType} />
+        </div>
+      </div>
+
+      <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
+    </div>
+    
+    <div class="relative p-6">
+      <div class="flex items-center gap-4 mb-4">
+        <a 
+          href={`/blog/category/${categorySlug}`}
+          class="px-3 py-1 text-sm font-medium text-white bg-cosmic-600/90 rounded-full transform group-hover:scale-110 transition-transform"
+        >
+          {post.category}
+        </a>
+        <time class="text-sm text-cosmic-300">
+          {format(post.publishDate, 'MMM d, yyyy')}
+        </time>
+      </div>
+      
+      <h3 class="text-xl font-bold mb-3 text-white group-hover:text-cosmic-200 transition-colors relative">
+        <span class="relative z-10">{post.title}</span>
+        <div class="absolute inset-0 bg-gradient-to-r from-cosmic-600/0 to-cosmic-400/0 group-hover:from-cosmic-600/10 group-hover:to-cosmic-400/10 transition-all duration-300 -z-10"></div>
+      </h3>
+      
+      <p class="text-gray-300 mb-4 line-clamp-2 transform group-hover:translate-x-1 transition-transform duration-300">
+        {post.excerpt}
+      </p>
+
+      <div class="flex flex-wrap gap-2">
+        {tagSlugs.map((slug, index) => (
+          <a 
+            href={`/blog/tag/${slug}`}
+            class="text-sm text-cosmic-400 transform hover:scale-110 transition-transform duration-300"
+          >
+            #{post.tags[index]}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</article>

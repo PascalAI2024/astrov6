@@ -1,0 +1,103 @@
+---
+import Button from '../common/Button.astro';
+
+const sampleQuestion = {
+  question: "What is the closest star to Earth?",
+  answers: [
+    "Proxima Centauri",
+    "Alpha Centauri",
+    "The Sun",
+    "Sirius"
+  ],
+  correct: 2
+};
+---
+
+<section class="relative py-16 overflow-hidden">
+  <!-- Background Effects -->
+  <div class="absolute inset-0">
+    <div class="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-900/95 to-gray-900"></div>
+    <div class="absolute inset-0 opacity-30"
+      style={{
+        background: `
+          radial-gradient(circle at 20% 50%, rgba(147, 51, 234, 0.15), transparent 70%),
+          radial-gradient(circle at 80% 50%, rgba(79, 70, 229, 0.15), transparent 70%)
+        `
+      }}
+    ></div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <!-- Game Preview -->
+      <div class="relative group">
+        <div class="absolute -inset-4 bg-gradient-to-r from-cosmic-600/20 to-purple-600/20 rounded-xl blur-xl opacity-75 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div class="relative bg-gray-900/50 backdrop-blur-sm rounded-xl p-8 border border-white/10">
+          <h2 class="text-3xl font-bold text-white mb-6">Test Your Cosmic Knowledge</h2>
+          <p class="text-gray-300 mb-8">Challenge yourself with our interactive astronomy quiz and compete with fellow cosmic explorers!</p>
+          
+          <!-- Sample Question Preview -->
+          <div class="mb-8">
+            <p class="text-lg text-cosmic-300 mb-4">Sample Question:</p>
+            <p class="text-white mb-6">{sampleQuestion.question}</p>
+            <div class="grid grid-cols-2 gap-4">
+              {sampleQuestion.answers.map((answer) => (
+                <button class="p-3 bg-gray-800/50 hover:bg-cosmic-600/50 text-white rounded-lg transition-colors text-sm backdrop-blur-sm">
+                  {answer}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <Button 
+            href="/play" 
+            variant="primary"
+            class="w-full justify-center group"
+          >
+            <span class="flex items-center gap-2">
+              Play Now
+              <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </span>
+          </Button>
+        </div>
+      </div>
+
+      <!-- Leaderboard Preview -->
+      <div class="relative">
+        <div class="absolute -inset-4 bg-gradient-to-r from-purple-600/20 to-cosmic-600/20 rounded-xl blur-xl opacity-75"></div>
+        <div class="relative bg-gray-900/50 backdrop-blur-sm rounded-xl p-8 border border-white/10">
+          <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span>🏆</span> Top Cosmic Explorers
+          </h3>
+
+          <div class="space-y-4">
+            {[
+              { name: "Cosmic Carl", score: 9800, rank: 1 },
+              { name: "StarGazer42", score: 8500, rank: 2 },
+              { name: "NebulaQueen", score: 7200, rank: 3 }
+            ].map((leader) => (
+              <div class="flex items-center gap-4 p-4 bg-gray-800/50 rounded-lg backdrop-blur-sm">
+                <div class="w-8 h-8 flex items-center justify-center bg-cosmic-600 rounded-full text-white font-bold">
+                  {leader.rank}
+                </div>
+                <div class="flex-grow">
+                  <div class="text-white font-medium">{leader.name}</div>
+                  <div class="text-cosmic-400 text-sm">{leader.score.toLocaleString()} points</div>
+                </div>
+                <div class="text-2xl">{leader.rank === 1 ? '👑' : leader.rank === 2 ? '🥈' : '🥉'}</div>
+              </div>
+            ))}
+          </div>
+
+          <div class="mt-6 text-center">
+            <a href="/play" class="text-cosmic-400 hover:text-cosmic-300 text-sm">
+              View Full Leaderboard →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
